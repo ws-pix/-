@@ -9,5 +9,4 @@
 
 ```python
 model, (X_train, X_test, y_train, y_test) = train_eval_xgb(df_type0.drop(['보증금/월세금','월세금/면적','월세금(만원)','보증금(만원)','주택유형_encoded'],axis=1),'월부담액',plot_feature_importance=True,plot_shap=False)
-
-
+![image](https://github.com/user-attachments/assets/6272b9e4-ef8e-41fd-895d-289f86dfbf95)
