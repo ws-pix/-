@@ -9,7 +9,7 @@ model, (X_train, X_test, y_train, y_test) = train_eval_xgb(df_type0.drop(['보�
 ```
 ![image](https://github.com/user-attachments/assets/f5b042fd-627b-43e0-adb4-65e0b6e40183)
 
-## 이 때 성능
+####  성능 확인
 
 <pre>
 Test RMSE: 0.3346
@@ -24,7 +24,7 @@ Test R^2: 0.9296
 ```python
 model, (X_train, X_test, y_train, y_test) = train_eval_xgb(df_type0.drop(['보증금/월세금','월세금/면적','월세금(만원)','보증금(만원)','주택유형_encoded'] + group_features,axis=1),'월부담액',plot_feature_importance=True,plot_shap=False)
 ```
-결과
+####  성능 확인
 <pre>
 Test RMSE: 0.3266
 Test MAE: 0.1947
@@ -105,7 +105,7 @@ X_input[cols_to_add] = df_type0[cols_to_add]
 
 model, (X_train, X_test, y_train, y_test) = train_eval_xgb(X_input, '월부담액', plot_feature_importance=True, plot_shap=False)
 ```
-#### 이 때 성능
+####  성능 확인
 <pre>
 Test RMSE: 0.3211
 Test MAE: 0.1940
@@ -128,7 +128,7 @@ features: ['병원_1km내_개수', '500m_이내_역_개수', '식당_0.5km내_�
 ```python
 model, (X_train, X_test, y_train, y_test) = train_eval_xgb(df_type1.drop(['보증금/월세금','월세금/면적','월세금(만원)','보증금(만원)','주택유형_encoded'],axis=1),'월부담액',plot_feature_importance=True,plot_shap=False)
 ```
-### 이 때 성능
+####  성능 확인
 <pre>
   Test RMSE: 0.1673
   Test MAE: 0.1058
@@ -140,7 +140,7 @@ model, (X_train, X_test, y_train, y_test) = train_eval_xgb(df_type1.drop(['보�
 # 연립 다세대 basci model
 model, (X_train, X_test, y_train, y_test) = train_eval_xgb(df_type1.drop(['보증금/월세금','월세금/면적','월세금(만원)','보증금(만원)','주택유형_encoded'] + group_features,axis=1),'월부담액',plot_feature_importance=True,plot_shap=False)
 ```
-### 이 때 성능
+####  성능 확인
 <pre>
 Test RMSE: 0.1663
 Test MAE: 0.1057
@@ -215,7 +215,7 @@ X_input[cols_to_add] = df_type1[cols_to_add]
 
 model, (X_train, X_test, y_train, y_test) = train_eval_xgb(X_input, '월부담액', plot_feature_importance=True, plot_shap=False)
 ```
-#### 이 때 성능
+####  성능 확인
 <pre>
 Test RMSE: 0.1599
 Test MAE: 0.1050
