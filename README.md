@@ -1,15 +1,15 @@
 ## 주의
 아파트와 연립 다세대를 구분하여 테스트할경우 df_type0, df_type1데이터를 만든 이후 ```주택유형_encoded```컬럼도 지운다, 계절 컬럼은 계약월을 이용해 만든 컬럼이고, 계약월이 더 중요하다!
 ## 아파트 모델 
-### 유형별(역, 공원...등) 최적의 거리 선택 과정
+### ** 유형별(역, 공원...등) 최적의 거리 선택 과정 **
 
-### 유형별 모든 거리를 다 넣었을 때
+###   1. 유형별 모든 거리를 다 넣었을 때
 ```python
 model, (X_train, X_test, y_train, y_test) = train_eval_xgb(df_type0.drop(['보증금/월세금','월세금/면적','월세금(만원)','보증금(만원)','주택유형_encoded'],axis=1),'월부담액',plot_feature_importance=True,plot_shap=False)
 ```
 ![image](https://github.com/user-attachments/assets/f5b042fd-627b-43e0-adb4-65e0b6e40183)
 
-### 이 때 성능
+## 이 때 성능
 
 <pre>
 Test RMSE: 0.3346
@@ -17,23 +17,26 @@ Test MAE: 0.1997
 Test R^2: 0.9296
 </pre>
 
-### 거리관련 features 다 뺀 모델 성능
+### 2. 거리관련 features 다 뺀 모델 성능(ver. 아파트)
 
-#### 이 모델과 모델의 성능을 향상시켜줄 거리를 찾아보는 과정을 거쳐보겠다
+최적의 거리를 찾아가는 과정
 
 ```python
 model, (X_train, X_test, y_train, y_test) = train_eval_xgb(df_type0.drop(['보증금/월세금','월세금/면적','월세금(만원)','보증금(만원)','주택유형_encoded'] + group_features,axis=1),'월부담액',plot_feature_importance=True,plot_shap=False)
 ```
-
+결과
 <pre>
 Test RMSE: 0.3266
 Test MAE: 0.1947
 Test R^2: 0.9329
 </pre>
 
-###
+### 모델 설명
+
 **아래 모델은 각 유형별 한개씩**
 즉 hospital의 5개* station*2개 * 3 * 3 * 3 * 4  = 1080개의 조합 중 최고의 성능을 보여주는 상위의 5개 조합을 보여줌.
+
+itertools.product()는 **두 개 이상의 iterable의 모든 가능한 데카르트 곱(Cartesian Product)**을 구할 때 사용해. 쉽게 말하면, 모든 가능한 조합(순서 중요)을 구해주는 함수를 이용하겠다!
 
 ```python
 import itertools
@@ -89,9 +92,9 @@ results_df = pd.DataFrame(results)
 # r2(성능) 기준 내림차순 정렬, 상위 5개 조합 확인
 top_results = results_df.sort_values('r2', ascending=False).head()
 print(top_results)
+```
 
-
-### 결과
+### 결과_나온 최고의 조합
 features: ['병원_1km내_개수', '500m_이내_역_개수', '식당_0.5km내_개수', '공원_800m_이내_개수', '파출소/지구대_1km내_개수', '대학_2km내_개수']
 
 ```python
@@ -102,7 +105,7 @@ X_input[cols_to_add] = df_type0[cols_to_add]
 
 model, (X_train, X_test, y_train, y_test) = train_eval_xgb(X_input, '월부담액', plot_feature_importance=True, plot_shap=False)
 ```
-
+#### 이 때 성능
 <pre>
 Test RMSE: 0.3211
 Test MAE: 0.1940
@@ -111,28 +114,40 @@ Test R^2: 0.9352
 
 ![image](https://github.com/user-attachments/assets/60ea49b4-b147-4baa-839f-7b0d5eae146b)
 
+## 결론
+
+features: ['병원_1km내_개수', '500m_이내_역_개수', '식당_0.5km내_개수', '공원_800m_이내_개수', '파출소/지구대_1km내_개수', '대학_2km내_개수'] 
+
+사용했을 때 
+**Test R^2: 0.9329  -> Test R^2: 0.9352**  
+성능이 유의미하게 증가함
+
 ## 연립다세대 모델 
+아파트와 동일한 과정 반복
+### 1. 유형별 모든 거리를 다 넣었을 때(ver.연립다세대)
 ```python
 model, (X_train, X_test, y_train, y_test) = train_eval_xgb(df_type1.drop(['보증금/월세금','월세금/면적','월세금(만원)','보증금(만원)','주택유형_encoded'],axis=1),'월부담액',plot_feature_importance=True,plot_shap=False)
 ```
-
+### 이 때 성능
 <pre>
   Test RMSE: 0.1673
   Test MAE: 0.1058
   Test R^2: 0.8388
 </pre>
 
+### 2. 거리관련 features 다 뺀 모델 성능(ver. 연립다세대)
 ```python
 # 연립 다세대 basci model
 model, (X_train, X_test, y_train, y_test) = train_eval_xgb(df_type1.drop(['보증금/월세금','월세금/면적','월세금(만원)','보증금(만원)','주택유형_encoded'] + group_features,axis=1),'월부담액',plot_feature_importance=True,plot_shap=False)
 ```
-
+### 이 때 성능
 <pre>
 Test RMSE: 0.1663
 Test MAE: 0.1057
 Test R^2: 0.8406
 </pre>
 
+### 아까와 같은 모델에 df_type1(연립 다세대)로만 바꿈
 ```python
 import itertools
 import pandas as pd
@@ -189,7 +204,7 @@ top_results = results_df.sort_values('r2', ascending=False).head()
 print(top_results)
 ```
 
-### 결과
+### 결과_나온 최고의 조합
 features: ['병원_1km내_개수', '1km_이내_역_개수', '식당_0.5km내_개수', '공원_500m_이내_개수', '파출소/지구대_0.5km내_개수', '대학_1km내_개수']
 
 ```python
@@ -200,6 +215,7 @@ X_input[cols_to_add] = df_type1[cols_to_add]
 
 model, (X_train, X_test, y_train, y_test) = train_eval_xgb(X_input, '월부담액', plot_feature_importance=True, plot_shap=False)
 ```
+#### 이 때 성능
 <pre>
 Test RMSE: 0.1599
 Test MAE: 0.1050
@@ -207,3 +223,11 @@ Test R^2: 0.8528
 </pre>
 
 ![image](https://github.com/user-attachments/assets/1aa7c968-c508-4655-92bd-f57b3e76ee64)
+
+## 결론
+
+features: ['병원_1km내_개수', '1km_이내_역_개수', '식당_0.5km내_개수', '공원_500m_이내_개수', '파출소/지구대_0.5km내_개수', '대학_1km내_개수']
+
+사용했을 때 
+**Test R^2: 0.8406  -> Test R^2: 0.8528**  
+성능이 유의미하게 증가함
