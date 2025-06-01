@@ -134,6 +134,7 @@ model, (X_train, X_test, y_train, y_test) = train_eval_xgb(df_type1.drop(['보�
   Test MAE: 0.1058
   Test R^2: 0.8388
 </pre>
+![image](https://github.com/user-attachments/assets/8c561ea8-0f64-4832-9824-08097bd288bd)
 
 ### 2. 거리관련 features 다 뺀 모델 성능(ver. 연립다세대)
 ```python
